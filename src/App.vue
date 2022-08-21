@@ -1,10 +1,17 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <v-app>
+    <app-login></app-login>
+  </v-app>
 </template>
+<script>
+import appLogin from './components/login.vue'
+export default {
+   name:"App",
+    components:{
+      appLogin,
+    },
+}
+</script>
 
 <style>
 #app {
