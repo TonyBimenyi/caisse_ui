@@ -1,41 +1,91 @@
 // eslint-disable-next-line vue/multi-word-component-names
 <template>
-  <div class="login_container">
-    <h1>BIMBO CAISSE APP</h1>
-      <div class="form">
-        <div class="label">
-            <label for="">Username:</label>
-        </div>
-        <div class="input">
-            <input type="text" placeholder="Enter your username...">
-        </div>
-        <div class="label">
-            <label for="">Password:</label>
-        </div>
-        <div class="input">
-            <input type="password" placeholder="Enter your username...">
-        </div>
-        <div class="rad">
-          <div class="radio">
-              <input type="radio">Bimbo SuperMarket
-          </div>
-          <div class="radio">
-              <input type="radio">Bimbo Pharma
-          </div>
-        </div>
-        <div class="button">
-            <button>Login</button>
-        </div>
-      </div>
-  </div>
+  <div class="container">
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form v-on:submit.prevent="login_user">
+        <h3>BIMBO Caisse App</h3>
+
+        <label for="username">Username</label>
+        <input type="text" v-model="form.email" placeholder="Enter your Username..." id="username">
+
+        <label for="password">Password</label>
+        <input type="password" v-model="form.password" placeholder="Password" id="password">
+         <label for="password">Select Shop</label>
+        <select name="" id="">
+          <option value="">--Select--</option>
+          <option value="">Bimbo SuperMarket</option>
+          <option value="">Bimbo Pharma</option>
+        </select>
+        <button>Log In</button>
+   
+    </form>
+    </div>
 </template>
 
 <script>
+import axios from 'axios'
+import Swal from 'sweetalert2'
 export default {
+ data(){
+    return{
+      form:{
+        email:'',
+        password:''
+      }
+    }
+  },
+   methods:{
+     login_user(){
+          axios
+          .post(this.$store.state.url+'login',this.form)
+          .then((resp) =>{
+              console.log(resp["data"]["status"]);
+              this.$store.state.user = resp.data 
+              //this.loadlist();
+              //reset form
+             this.form.email = '';
+             this.form.password = '';
+             if(resp["data"]["status"] == "error")
+             {
+               Swal.fire({
+                title: 'OPPS',
+                text:   "error",
+                icon: 'warning',
+              
+            });
+             }
+             else
+             {
+               Swal.fire({
+                title: 'Hurry',
+                text:   "You have been logged-in successfully",
+                icon: 'success',
+              
+            });
+            this.$router.push('/sales')
+             }
+              
+          })
+          .catch((e)=>{
+              console.log(e);
+               Swal.fire({
+              title: 'Hurry',
+              text:   e,
+              icon: 'warning',
+              
+            });
+          })
+        }
 
+  }
 }
 </script>
 
 <style src='../assets/css/login.css' scoped>
-
+  .container{
+  background: black;
+  }
 </style>
